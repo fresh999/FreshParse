@@ -7,15 +7,35 @@ void yyerror(char *s);
 int yylex();
 
 extern FILE *yyin;
+extern char *yytext;
 
 %}
 
-%token BEG ID
+%token BEG ID END BEG_EQ END_EQ
 
 %%
 
-beg: BEG '\n' {printf("Hello world\n");}
+lines: line
+     | lines line
+     ;
+
+line: beg '\n'
+    | end '\n'
+    | eq '\n'
+    | eq_end '\n'
+    | ID {printf("%s\n", yytext);} '\n'
+    ;
+
+beg: BEG {printf("Hello world\n");}
    ;
+
+end: END {printf("Goodbye world\n");}
+   ;
+
+eq: BEG_EQ {printf("Equation\n");}
+  ;
+
+eq_end: END_EQ {printf("Goodbye equation\n");}
 
 %%
 

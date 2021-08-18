@@ -9,9 +9,13 @@
 
 %%
 
-^\\begin\{.*\} {return BEG;}
-.* return ID;
-\n ;
+^\\begin\{document\} {BEGIN DOC; return BEG;}
+<DOC>^\\end\{document\} {BEGIN 0; return END;}
+<DOC>\\begin\{equation\} {return BEG_EQ;}
+<DOC>\\end\{equation\} {return END_EQ;}
+^[ \t]*\n ECHO;
+[\\\[\]\{\}]*|.* {return ID;}
+\n return *yytext;
 
 %%
 
