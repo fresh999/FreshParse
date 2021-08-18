@@ -11,10 +11,15 @@
 
 ^\\begin\{document\} {BEGIN DOC; return BEG;}
 <DOC>^\\end\{document\} {BEGIN 0; return END;}
-<DOC>\\begin\{equation\} {return BEG_EQ;}
-<DOC>\\end\{equation\} {return END_EQ;}
+
+<DOC>^[ \t]*\\begin\{equation\*?\} |
+<DOC>^[ \t]*\\begin\{align\*?\} {return BEG_EQ;}
+
+<DOC>^[ \t]*\\end\{equation\*?\} |
+<DOC>^[ \t]*\\end\{align\*?\} {return END_EQ;}
+
 ^[ \t]*\n ECHO;
-[\\\[\]\{\}]*|.* {return ID;}
+[\\\(\)\[\]\{\}]*|.* {return ID;}
 \n return *yytext;
 
 %%

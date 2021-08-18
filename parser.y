@@ -32,10 +32,10 @@ beg: BEG {printf("Hello world\n");}
 end: END {printf("Goodbye world\n");}
    ;
 
-eq: BEG_EQ {printf("Equation\n");}
+eq: BEG_EQ {printf("%s\n", yytext);}
   ;
 
-eq_end: END_EQ {printf("Goodbye equation\n");}
+eq_end: END_EQ {printf("%s\n", yytext);}
 
 %%
 
