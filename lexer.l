@@ -9,27 +9,27 @@
 
 %%
 
-^\\begin\{document\} {BEGIN DOC; return BEG;}
-<DOC>^\\end\{document\} {BEGIN 0; return END;}
+^[ \t]*\\begin\{document\} {BEGIN DOC; return BEG;}
+^[ \t]*\\end\{document\} {BEGIN 0; return END;}
 
-<DOC>^[ \t]*\\begin\{equation\*?\} |
-<DOC>^[ \t]*\\begin\{align\*?\} {return BEG_DISPLAY_MATH;}
+^[ \t]*\\begin\{equation\*?\} |
+^[ \t]*\\begin\{align\*?\} {return BEG_DISPLAY_MATH;}
 
-<DOC>^[ \t]*\\end\{equation\*?\} |
-<DOC>^[ \t]*\\end\{align\*?\} {return END_DISPLAY_MATH;}
+^[ \t]*\\end\{equation\*?\} |
+^[ \t]*\\end\{align\*?\} {return END_DISPLAY_MATH;}
 
-<DOC>^[ \t]*\\begin\{theorem\} {return BEG_THEOREM;}
-<DOC>^[ \t]*\\begin\{proposition\} {return BEG_PROPOSITION;}
-<DOC>^[ \t]*\\begin\{lemma\} {return BEG_LEMMA;}
-<DOC>^[ \t]*\\begin\{proof\} {return BEG_PROOF;}
+^[ \t]*\\begin\{theorem\} {return BEG_THEOREM;}
+^[ \t]*\\begin\{proposition\} {return BEG_PROPOSITION;}
+^[ \t]*\\begin\{lemma\} {return BEG_LEMMA;}
+^[ \t]*\\begin\{proof\} {return BEG_PROOF;}
 
-<DOC>^[ \t]*\\end\{theorem\} {return END_THEOREM;}
-<DOC>^[ \t]*\\end\{proposition\} {return END_PROPOSITION;}
-<DOC>^[ \t]*\\end\{lemma\} {return END_LEMMA;}
-<DOC>^[ \t]*\\end\{proof\} {return END_PROOF;}
+^[ \t]*\\end\{theorem\} {return END_THEOREM;}
+^[ \t]*\\end\{proposition\} {return END_PROPOSITION;}
+^[ \t]*\\end\{lemma\} {return END_LEMMA;}
+^[ \t]*\\end\{proof\} {return END_PROOF;}
 
 ^[ \t]*\n ECHO;
-[a-zA-Z0-9 \(\)\?]* {return DOC_ID;}
+[\(\)\[\]\{\}\?]*|.* {return DOC_ID;}
 \n {return *yytext;}
 
 %%
