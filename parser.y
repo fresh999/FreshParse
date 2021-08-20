@@ -11,14 +11,25 @@ extern char *yytext;
 
 %}
 
-%token BEG DOC_ID END BEG_DISPLAY_MATH END_DISPLAY_MATH BEG_THEOREM BEG_PROPOSITION BEG_LEMMA BEG_PROOF END_THEOREM END_PROPOSITION END_LEMMA END_PROOF BEG_ENUMERATE END_ENUMERATE
+%token BEG DOC_ID PREAMBLE_ID BEG_PREAMBLE END BEG_DISPLAY_MATH END_DISPLAY_MATH BEG_THEOREM BEG_PROPOSITION BEG_LEMMA BEG_PROOF END_THEOREM END_PROPOSITION END_LEMMA END_PROOF
 
 %%
 
-document: env
+document: preamble beg main end
+
+preamble: beg_preamble preamble_content
+
+preamble_content: PREAMBLE_ID '\n'
+        | preamble_content PREAMBLE_ID '\n'
+        ;
+
+beg_preamble: BEG_PREAMBLE '\n'
+            ;
+
+main: env
         | line
-        | document line
-        | document env
+        | main line
+        | main env
         ;
 
 env: thm_env
@@ -39,6 +50,12 @@ env_content: env
            | env_content line
            | env_content env
            ;
+
+beg: BEG '\n'
+   ;
+
+end: END '\n'
+   ;
 
 line: DOC_ID {printf("%s\n", yytext);} '\n'
     ;
