@@ -1,5 +1,7 @@
 %{
 
+#include "utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,6 +10,8 @@ int yylex();
 
 extern FILE *yyin;
 extern char *yytext;
+size_t indent_level = 0;
+size_t par_wrap = 0;
 
 %}
 
@@ -27,10 +31,10 @@ beg_preamble: BEG_PREAMBLE '\n'
             ;
 
 main: env
-        | line
-        | main line
-        | main env
-        ;
+    | line
+    | main line
+    | main env
+    ;
 
 env: thm_env
    | math_env
@@ -57,37 +61,44 @@ beg: BEG '\n'
 end: END '\n'
    ;
 
-line: DOC_ID {printf("%s\n", yytext);} '\n'
+line: DOC_ID {
+    print_indentation(indent_level);
+    if (!par_wrap) {
+        printf("<p>");
+        printf("%s", yytext);
+        printf("%s\n", "</p>");
+    }
+    else printf("%s\n", yytext);} '\n'
     ;
 
-eq: BEG_DISPLAY_MATH {printf("%s\n", yytext);} '\n'
+eq: BEG_DISPLAY_MATH {print_indentation(indent_level++); printf("%s\n", yytext); ++par_wrap;} '\n'
    ;
 
-end_eq: END_DISPLAY_MATH {printf("%s\n", yytext);} '\n'
+end_eq: END_DISPLAY_MATH {print_indentation(--indent_level); printf("%s\n", yytext); --par_wrap;} '\n'
       ;
 
-thm: BEG_THEOREM {printf("%s\n", "<div class=\"theorem\">");} '\n'
+thm: BEG_THEOREM {print_indentation(indent_level++); printf("%s\n", "<div class=\"theorem\">"); ++par_wrap;} '\n'
    ;
 
-end_thm: END_THEOREM {printf("%s\n", "</div>");} '\n'
+end_thm: END_THEOREM {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
        ;
 
-prop: BEG_PROPOSITION {printf("%s\n", "<div class=\"proposition\">");} '\n'
+prop: BEG_PROPOSITION {print_indentation(indent_level++); printf("%s\n", "<div class=\"proposition\">"); ++par_wrap;} '\n'
     ;
 
-end_prop: END_PROPOSITION {printf("%s\n", "</div>");} '\n'
+end_prop: END_PROPOSITION {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
         ;
 
-lemma: BEG_LEMMA {printf("%s\n", "<div class=\"lemma\">");} '\n'
+lemma: BEG_LEMMA {print_indentation(indent_level++); printf("%s\n", "<div class=\"lemma\">"); ++par_wrap;} '\n'
      ;
 
-end_lemma: END_LEMMA {printf("%s\n", "</div>");} '\n'
+end_lemma: END_LEMMA {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
          ;
 
-proof: BEG_PROOF {printf("%s\n", "<div class=\"proof\">");} '\n'
+proof: BEG_PROOF {print_indentation(indent_level++); printf("%s\n", "<div class=\"proof\">"); ++par_wrap;} '\n'
      ;
 
-end_proof: END_PROOF {printf("%s\n", "</div>");} '\n'
+end_proof: END_PROOF {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
          ;
 
 %%

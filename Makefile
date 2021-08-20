@@ -1,11 +1,11 @@
-obj = y.tab.o lex.yy.o
+obj = y.tab.o lex.yy.o utils.o
 
 LEX = flex -I
 YACC = yacc
 CC = gcc
 CFLAGS = -Wall -Wextra -c
 
-main: y.tab.o lex.yy.o
+main: $(obj)
 	$(CC) -o main $(obj)
 
 lex.yy.o: lex.yy.c y.tab.h
@@ -13,6 +13,9 @@ lex.yy.o: lex.yy.c y.tab.h
 
 y.tab.o: y.tab.c
 	$(CC) $(CFLAGS) y.tab.c
+
+utils.o: utils.c
+	$(CC) $(CFLAGS) utils.c
 
 y.tab.c y.tab.h: parser.y
 	$(YACC) -d parser.y
