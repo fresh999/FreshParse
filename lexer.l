@@ -31,7 +31,11 @@
 <DOC>^[ \t]*\\end\{lemma\} {yytext += count_lspaces(yytext); return END_LEMMA;}
 <DOC>^[ \t]*\\end\{proof\} {yytext += count_lspaces(yytext); return END_PROOF;}
 
+<DOC>^[ \t]*\\begin\{enumerate\} {yytext += count_lspaces(yytext); return BEG_ENUMERATE;}
+<DOC>^[ \t]*\\end\{enumerate\} {yytext += count_lspaces(yytext); return END_ENUMERATE;}
+
 ^[ \t]*\n ECHO;
+^[ \t]*"\item" {ECHO; return ITEM;}
 <DOC>.* {yytext += count_lspaces(yytext); return DOC_ID;}
 <PREAMBLE>[\\\{\}]*|.* {return PREAMBLE_ID;}
 \n {return *yytext;}
