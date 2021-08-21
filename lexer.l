@@ -25,11 +25,13 @@
 <DOC>^[ \t]*\\begin\{proposition\} {yytext += count_lspaces(yytext); return BEG_PROPOSITION;}
 <DOC>^[ \t]*\\begin\{lemma\} {yytext += count_lspaces(yytext); return BEG_LEMMA;}
 <DOC>^[ \t]*\\begin\{proof\} {yytext += count_lspaces(yytext); return BEG_PROOF;}
+<DOC>^[ \t]*\\begin\{definition\} {yytext += count_lspaces(yytext); return BEG_DEFINITION;}
 
 <DOC>^[ \t]*\\end\{theorem\} {yytext += count_lspaces(yytext); return END_THEOREM;}
 <DOC>^[ \t]*\\end\{proposition\} {yytext += count_lspaces(yytext); return END_PROPOSITION;}
 <DOC>^[ \t]*\\end\{lemma\} {yytext += count_lspaces(yytext); return END_LEMMA;}
 <DOC>^[ \t]*\\end\{proof\} {yytext += count_lspaces(yytext); return END_PROOF;}
+<DOC>^[ \t]*\\end\{definition\} {yytext += count_lspaces(yytext); return END_DEFINITION;}
 
 <DOC>^[ \t]*\\begin\{enumerate\} {yytext += count_lspaces(yytext); return BEG_ENUMERATE;}
 <DOC>^[ \t]*\\end\{enumerate\} {yytext += count_lspaces(yytext); return END_ENUMERATE;}
