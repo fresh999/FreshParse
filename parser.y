@@ -32,8 +32,8 @@ beg_preamble: BEG_PREAMBLE '\n'
 
 main: env
     | line
-    | main line
     | main env
+    | main line
     ;
 
 env: thm_env
@@ -53,11 +53,12 @@ math_env: eq env_content end_eq
 enumerate_env: enumerate enumerate_items end_enumerate
              ;
 
-enumerate_items: ITEM env
-               | ITEM DOC_ID '\n'
-               | enumerate_items ITEM env
-               | enumerate_items ITEM DOC_ID '\n'
+enumerate_items: env {print_indentation(indent_level); printf("</li>\n");}
+               | item
+               | enumerate_items env {print_indentation(indent_level); printf("</li>\n");}
+               | enumerate_items item
                ;
+
 
 env_content: env
            | line
@@ -73,13 +74,18 @@ end: END '\n'
 
 line: DOC_ID {
     print_indentation(indent_level);
-    if (!par_wrap) {
-        printf("<p>");
-        printf("%s", yytext);
-        printf("%s\n", "</p>");
-    }
-    else printf("%s\n", yytext);} '\n'
+    if (!par_wrap)
+        printf("%s%s%s\n", "<p>", yytext, "</p>");
+    else
+        printf("%s\n", yytext);} '\n'
     ;
+
+item: ITEM {
+    print_indentation(indent_level);
+    if (is_empty_string(yytext))
+        printf("%s\n", "<li>");
+    else
+        printf("%s%s%s\n", "<li>", yytext, "</li>");} '\n'
 
 eq: BEG_DISPLAY_MATH {print_indentation(indent_level++); printf("%s\n", yytext); ++par_wrap;} '\n'
    ;

@@ -35,7 +35,7 @@
 <DOC>^[ \t]*\\end\{enumerate\} {yytext += count_lspaces(yytext); return END_ENUMERATE;}
 
 ^[ \t]*\n ECHO;
-^[ \t]*"\item" {ECHO; return ITEM;}
+^[ \t]*\\item(.*) {yytext += (count_lspaces(yytext) + 5); return ITEM;}
 <DOC>.* {yytext += count_lspaces(yytext); return DOC_ID;}
 <PREAMBLE>[\\\{\}]*|.* {return PREAMBLE_ID;}
 \n {return *yytext;}
