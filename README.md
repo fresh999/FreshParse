@@ -18,4 +18,4 @@ Lists support nesting but the nested environments can only contain either plain 
 Finally, the LaTeX document to be processed can contain (as it usually does) a preamble. FreshParse will just ignore it.
 
 ### Output
-FreshParse wraps plain text in paragraph tags. It formats lists by inserting the `<ol>` (or `<ul>`) and `<li>` tags and it processes theorem-like environments by wrapping them up in `<div>` tags and adding `class=theorem_type`, according to the theorem-like environment in the LaTeX document.
+FreshParse wraps plain text in paragraph tags. It formats lists by inserting the `<ol>` (or `<ul>`) and `<li>` tags and it processes theorem-like environments by wrapping them up in `<div>` tags and adding `class=theorem_type`, according to the theorem-like environment in the LaTeX document. This allows you to style your theorem-like environments using CSS selectors.
