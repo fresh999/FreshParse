@@ -27,14 +27,16 @@
 <DOC>^[ \t]*\\begin\{proof\} {yytext += count_lspaces(yytext); return BEG_PROOF;}
 <DOC>^[ \t]*\\begin\{definition\} {yytext += count_lspaces(yytext); return BEG_DEFINITION;}
 
-<DOC>^[ \t]*\\end\{theorem\} {yytext += count_lspaces(yytext); return END_THEOREM;}
-<DOC>^[ \t]*\\end\{proposition\} {yytext += count_lspaces(yytext); return END_PROPOSITION;}
-<DOC>^[ \t]*\\end\{lemma\} {yytext += count_lspaces(yytext); return END_LEMMA;}
-<DOC>^[ \t]*\\end\{proof\} {yytext += count_lspaces(yytext); return END_PROOF;}
-<DOC>^[ \t]*\\end\{definition\} {yytext += count_lspaces(yytext); return END_DEFINITION;}
+<DOC>^[ \t]*\\end\{theorem\} |
+<DOC>^[ \t]*\\end\{proposition\} |
+<DOC>^[ \t]*\\end\{lemma\} |
+<DOC>^[ \t]*\\end\{proof\} |
+<DOC>^[ \t]*\\end\{definition\} {yytext += count_lspaces(yytext); return END_THM_LIKE;}
 
 <DOC>^[ \t]*\\begin\{enumerate\} {yytext += count_lspaces(yytext); return BEG_ENUMERATE;}
 <DOC>^[ \t]*\\end\{enumerate\} {yytext += count_lspaces(yytext); return END_ENUMERATE;}
+<DOC>^[ \t]*\\begin\{itemize\} {yytext += count_lspaces(yytext); return BEG_ITEMIZE;}
+<DOC>^[ \t]*\\end\{itemize\} {yytext += count_lspaces(yytext); return END_ITEMIZE;}
 
 ^[ \t]*\n ECHO;
 ^[ \t]*\\item(.*) {yytext += (count_lspaces(yytext) + 5); return ITEM;}

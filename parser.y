@@ -15,7 +15,7 @@ size_t par_wrap = 0;
 
 %}
 
-%token BEG DOC_ID PREAMBLE_ID BEG_PREAMBLE END BEG_DISPLAY_MATH END_DISPLAY_MATH BEG_THEOREM BEG_PROPOSITION BEG_LEMMA BEG_PROOF BEG_DEFINITION END_THEOREM END_PROPOSITION END_LEMMA END_PROOF END_DEFINITION BEG_ENUMERATE END_ENUMERATE ITEM
+%token BEG DOC_ID PREAMBLE_ID BEG_PREAMBLE END BEG_DISPLAY_MATH END_DISPLAY_MATH BEG_THEOREM BEG_PROPOSITION BEG_LEMMA BEG_PROOF BEG_DEFINITION END_THM_LIKE BEG_ENUMERATE END_ENUMERATE BEG_ITEMIZE END_ITEMIZE ITEM
 
 %%
 
@@ -38,28 +38,28 @@ main: env
 
 env: thm_env
    | math_env
-   | enumerate_env
+   | list_env
    ;
 
-thm_env: thm env_content end_thm
-       | prop env_content end_prop
-       | lemma env_content end_lemma
-       | proof env_content end_proof
-       | definition env_content end_definition
+thm_env: thm env_content end_thm_like
+       | prop env_content end_thm_like
+       | lemma env_content end_thm_like
+       | proof env_content end_thm_like
+       | definition env_content end_thm_like
        ;
 
 math_env: eq env_content end_eq
         ;
 
-enumerate_env: enumerate enumerate_items end_enumerate
-             ;
+list_env: enumerate items end_enumerate
+        | itemize items end_itemize
+        ;
 
-enumerate_items: env {print_indentation(indent_level); printf("</li>\n");}
-               | item
-               | enumerate_items env {print_indentation(indent_level); printf("</li>\n");}
-               | enumerate_items item
-               ;
-
+items: env {print_indentation(indent_level); printf("</li>\n");}
+     | item
+     | items env {print_indentation(indent_level); printf("</li>\n");}
+     | items item
+     ;
 
 env_content: env
            | line
@@ -97,38 +97,32 @@ end_eq: END_DISPLAY_MATH {print_indentation(--indent_level); printf("%s\n", yyte
 thm: BEG_THEOREM {print_indentation(indent_level++); printf("%s\n", "<div class=\"theorem\">"); ++par_wrap;} '\n'
    ;
 
-end_thm: END_THEOREM {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
-       ;
+end_thm_like: END_THM_LIKE {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
+            ;
 
 prop: BEG_PROPOSITION {print_indentation(indent_level++); printf("%s\n", "<div class=\"proposition\">"); ++par_wrap;} '\n'
     ;
 
-end_prop: END_PROPOSITION {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
-        ;
-
 lemma: BEG_LEMMA {print_indentation(indent_level++); printf("%s\n", "<div class=\"lemma\">"); ++par_wrap;} '\n'
      ;
-
-end_lemma: END_LEMMA {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
-         ;
 
 proof: BEG_PROOF {print_indentation(indent_level++); printf("%s\n", "<div class=\"proof\">"); ++par_wrap;} '\n'
      ;
 
-end_proof: END_PROOF {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
-         ;
-
 definition: BEG_DEFINITION {print_indentation(indent_level++); printf("%s\n", "<div class=\"definition\">"); ++par_wrap;} '\n'
      ;
-
-end_definition: END_DEFINITION {print_indentation(--indent_level); printf("%s\n", "</div>"); --par_wrap;} '\n'
-         ;
 
 enumerate: BEG_ENUMERATE {print_indentation(indent_level++); printf("%s\n", "<ol>"); ++par_wrap;} '\n'
          ;
 
 end_enumerate: END_ENUMERATE {print_indentation(--indent_level); printf("%s\n", "</ol>"); --par_wrap;} '\n'
              ;
+
+itemize: BEG_ITEMIZE {print_indentation(indent_level++); printf("%s\n", "<ul>"); ++par_wrap;} '\n'
+       ;
+
+end_itemize: END_ITEMIZE {print_indentation(--indent_level); printf("%s\n", "</ul>"); --par_wrap;} '\n'
+           ;
 
 %%
 
